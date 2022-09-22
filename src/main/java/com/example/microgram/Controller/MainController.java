@@ -41,4 +41,9 @@ public class MainController {
     public ResponseEntity<List<PostDto>> getPostsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getPostsByUsername(username), HttpStatus.OK);
     }
+
+    @GetMapping("/reels/{username}")
+    public ResponseEntity<List<PostDto>> getReelsByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(service.getReelsByUsername(username), HttpStatus.OK);
+    }
 }

@@ -34,4 +34,8 @@ public class MainService {
     public List<PostDto> getPostsByUsername(String username) {
         return postDao.getPostsByUsername(username);
     }
+
+    public List<PostDto> getReelsByUsername(String username) {
+        return postDao.getReelsByUsername(username);
+    }
 }
