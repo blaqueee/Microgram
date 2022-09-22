@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserDto {
     private String userName;
     private String name;

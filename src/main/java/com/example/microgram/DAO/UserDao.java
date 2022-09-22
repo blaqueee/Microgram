@@ -1,15 +1,10 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.UserDto;
-import com.example.microgram.Entity.User;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -31,8 +26,10 @@ public class UserDao {
         return jdbcTemplate.queryForObject(query, new UserMapper(jdbcTemplate), email);
     }
 
-    public String isRegistered(String email) {
-        var user = Optional.of(getUserByEmail(email));
-        return user.isPresent() ? "Пользователь есть в системе" : "Пользователя нету в системе";
+    public String ifExists(String email) {
+        String query = "select count(id) from users\n" +
+                "where email = ?";
+        var result = jdbcTemplate.queryForObject(query, Integer.class, email);
+        return result == 1 ? "Пользователь есть в системе" : "Пользователя нету в системе";
     }
 }
