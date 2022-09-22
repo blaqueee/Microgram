@@ -1,5 +1,7 @@
 package com.example.microgram.Entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,20 +10,14 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class User {
     private String userName;
+    private String name;
     private String email;
     private String password;
-    private List<Post> posts;
-    private List<User> subscriptions;
-    private List<User> followers;
-
-    public User(String userName, String email, String password) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.posts = new ArrayList<>();
-        this.subscriptions = new ArrayList<>();
-        this.followers = new ArrayList<>();
-    }
+    private Integer posts;
+    private Integer subscriptions;
+    private Integer followers;
 }
