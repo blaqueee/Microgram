@@ -1,5 +1,10 @@
 package com.example.microgram.Service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
 public class CommentService {
     public String deleteComment(int commentID) {
         // TODO реализация удаления комментария по ID
