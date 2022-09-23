@@ -53,4 +53,9 @@ public class MainController {
     public ResponseEntity<List<PostDto>> getReelsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getReelsByUsername(username), HttpStatus.OK);
     }
+
+    @GetMapping("/liked/{username}/{postID}") // проверка лайка пользователя определенного поста
+    public ResponseEntity<String> ifUserLikedThisPost(@PathVariable String username, @PathVariable int postID) {
+        return new ResponseEntity<>(service.ifUserLiked(username, postID), HttpStatus.OK);
+    }
 }

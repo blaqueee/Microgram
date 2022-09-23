@@ -1,5 +1,6 @@
 package com.example.microgram.Service;
 
+import com.example.microgram.DAO.LikeDao;
 import com.example.microgram.DAO.PostDao;
 import com.example.microgram.DAO.UserDao;
 import com.example.microgram.DTO.PostDto;
@@ -14,6 +15,7 @@ import java.util.List;
 public class MainService {
     private final UserDao userDao;
     private final PostDao postDao;
+    private final LikeDao likeDao;
 
     public List<UserDto> getUserByName(String name) {
        return userDao.getUserByName(name);
@@ -37,5 +39,9 @@ public class MainService {
 
     public List<PostDto> getReelsByUsername(String username) {
         return postDao.getReelsByUsername(username);
+    }
+
+    public String ifUserLiked(String username, int postID) {
+        return likeDao.ifUserLiked(username, postID);
     }
 }
