@@ -25,21 +25,20 @@ public class UserDao {
             "        where s.follower_id = u.id) subscriptions,\n" +
             "       (select count(id)\n" +
             "           from subscriptions s\n" +
-            "           where s.user_id = u.id) followers\n" +
-            "from users u\n";
+            "           where s.user_id = u.id) followers \n";
 
     public List<UserDto> getUserByName(String name) {
-        String query = queryTemp + "where u.name = ?";
+        String query = queryTemp + "from users u where u.name = ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), name);
     }
 
     public List<UserDto> getUserByUsername(String username) {
-        String query = queryTemp + "where u.username = ?";
+        String query = queryTemp + "from users u where u.username = ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), username);
     }
 
     public List<UserDto> getUserByEmail(String email) {
-        String query =  queryTemp + "where u.email = ?";
+        String query =  queryTemp + "from users u where u.email = ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), email);
     }
 
@@ -48,5 +47,27 @@ public class UserDao {
                 "where email = ?";
         var result = jdbcTemplate.queryForObject(query, Integer.class, email);
         return result == 1 ? "Пользователь есть в системе" : "Пользователя нету в системе";
+    }
+
+    public List<UserDto> getFollowersByUsername(String username) {
+        String query = queryTemp + "from subscriptions s\n" +
+                "         inner join users u on u.id = s.follower_id\n" +
+                "where s.user_id = (\n" +
+                "    select id\n" +
+                "    from users\n" +
+                "    where username = ?\n" +
+                ");";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), username);
+    }
+
+    public List<UserDto> getSubscriptionsByUsername(String username) {
+        String query = queryTemp + "from subscriptions s\n" +
+                "         inner join users u on u.id = s.user_id\n" +
+                "where s.follower_id = (\n" +
+                "    select id\n" +
+                "    from users\n" +
+                "    where username = ?\n" +
+                ");";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), username);
     }
 }
