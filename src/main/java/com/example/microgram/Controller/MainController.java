@@ -2,6 +2,7 @@ package com.example.microgram.Controller;
 
 import com.example.microgram.DTO.PostDto;
 import com.example.microgram.DTO.UserDto;
+import com.example.microgram.DataGenerator.Generator;
 import com.example.microgram.Service.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,33 +17,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
     private final MainService service;
+    private final Generator generator;
 
-    @GetMapping("/user/{name}")
-    public ResponseEntity<UserDto> getUserByName(@PathVariable String name) {
+    @GetMapping("/")  // генератор данных
+    public ResponseEntity<List<String>> insertData() {
+        return new ResponseEntity<>(generator.insertTestData(), HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{name}") // поиск пользователя по имени
+    public ResponseEntity<List<UserDto>> getUserByName(@PathVariable String name) {
         return new ResponseEntity<>(service.getUserByName(name), HttpStatus.OK);
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+    @GetMapping("/username/{username}") // поиск пользователя по имени пользователя
+    public ResponseEntity<List<UserDto>> getUserByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getUserByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+    @GetMapping("/email/{email}") // поиск пользователя по почте
+    public ResponseEntity<List<UserDto>> getUserByEmail(@PathVariable String email) {
         return new ResponseEntity<>(service.getUserByEmail(email), HttpStatus.OK);
     }
 
-    @GetMapping("/registered/{email}")
+    @GetMapping("/exists/{email}") // проверка на наличие поьзователя в системе
     public ResponseEntity<String> isRegistered(@PathVariable String email) {
         return new ResponseEntity<>(service.isRegistered(email), HttpStatus.OK);
     }
 
-    @GetMapping("/posts/{username}")
+    @GetMapping("/posts/{username}") // увидеть посты пользователя по имени пользователя
     public ResponseEntity<List<PostDto>> getPostsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getPostsByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping("/reels/{username}")
+    @GetMapping("/reels/{username}") // показать ленту пользователя на основе подписок
     public ResponseEntity<List<PostDto>> getReelsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getReelsByUsername(username), HttpStatus.OK);
     }

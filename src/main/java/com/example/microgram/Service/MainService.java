@@ -15,15 +15,15 @@ public class MainService {
     private final UserDao userDao;
     private final PostDao postDao;
 
-    public UserDto getUserByName(String name) {
+    public List<UserDto> getUserByName(String name) {
        return userDao.getUserByName(name);
     }
 
-    public UserDto getUserByUsername(String username) {
+    public List<UserDto> getUserByUsername(String username) {
         return userDao.getUserByUsername(username);
     }
 
-    public UserDto getUserByEmail(String email) {
+    public List<UserDto> getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
     }
 

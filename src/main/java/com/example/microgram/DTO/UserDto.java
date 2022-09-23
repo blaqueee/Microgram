@@ -14,7 +14,7 @@ public class UserDto {
     private String name;
     private String email;
     private String password;
-    private Integer posts;
-    private Integer subscriptions;
-    private Integer followers;
+    private int posts;
+    private int subscriptions;
+    private int followers;
 }
