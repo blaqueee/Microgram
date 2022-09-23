@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/likes")
 @RequiredArgsConstructor
 public class LikeController {
-
     private final LikeService service;
 
     @GetMapping("/liked/{username}/{postID}") // проверка лайка пользователя определенного поста

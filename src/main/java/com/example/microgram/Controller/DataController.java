@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class DataController {
-
     private final DataService service;
 
     @GetMapping("/")  // генератор данных
