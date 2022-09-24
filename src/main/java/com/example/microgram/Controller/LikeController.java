@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikeController {
     private final LikeService service;
 
-    @GetMapping("/liked/{username}/{postID}") // проверка лайка пользователя определенного поста
+    @GetMapping("/{username}/{postID}") // проверка лайка пользователя определенного поста
     public ResponseEntity<String> ifUserLikedThisPost(@PathVariable String username, @PathVariable int postID) {
         return new ResponseEntity<>(service.ifUserLiked(username, postID), HttpStatus.OK);
     }

@@ -1,11 +1,13 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.UserDto;
+import com.example.microgram.Utility.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Component
@@ -69,5 +71,40 @@ public class UserDao {
                 "    where username = ?\n" +
                 ");";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), username);
+    }
+
+    public void dropTable() {
+        String query = "DROP TABLE IF EXISTS users";
+        jdbcTemplate.execute(query);
+        System.out.println("dropped table 'users'");
+    }
+
+    public void createTableUsers() {
+        String query = "create table users\n" +
+                "(\n" +
+                "    id serial primary key not null,\n" +
+                "    username varchar(20) not null,\n" +
+                "    name varchar(20) not null,\n" +
+                "    email varchar(45) not null,\n" +
+                "    password varchar(45) not null\n" +
+                ");\n";
+        jdbcTemplate.update(query);
+        System.out.println("created table 'users'");
+    }
+
+    public void insertUsers(List<UserEnum> users) {
+        String query = "INSERT INTO users(username, name, email, password)\n" +
+                "VALUES(?, ?, ?, ?)";
+        for (UserEnum user : users) {
+            jdbcTemplate.update(conn -> {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getEmail());
+                ps.setString(4, user.getPassword());
+                return ps;
+            });
+        }
+        System.out.println("inserted " + users.size() + " rows into 'users'");
     }
 }

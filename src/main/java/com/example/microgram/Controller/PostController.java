@@ -19,12 +19,12 @@ public class PostController {
 
     private final PostService service;
 
-    @GetMapping("/username/{username}") // увидеть посты пользователя по имени пользователя
+    @GetMapping("/{username}") // увидеть посты пользователя по имени пользователя
     public ResponseEntity<List<PostDto>> getPostsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getPostsByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping("/reels/{username}") // показать ленту пользователя на основе подписок
+    @GetMapping("/{username}/reels") // показать ленту пользователя на основе подписок
     public ResponseEntity<List<PostDto>> getReelsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getReelsByUsername(username), HttpStatus.OK);
     }

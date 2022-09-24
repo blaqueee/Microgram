@@ -38,12 +38,12 @@ public class UserController {
         return new ResponseEntity<>(service.isRegistered(email), HttpStatus.OK);
     }
 
-    @GetMapping("/followers/{username}")
+    @GetMapping("/{username}/followers")
     public ResponseEntity<List<UserDto>> getFollowersByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getFollowersByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping("/subscriptions/{username}")
+    @GetMapping("/{username}/subscriptions")
     public ResponseEntity<List<UserDto>> getSubscriptionsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(service.getSubscriptionsByUsername(username), HttpStatus.OK);
     }
