@@ -1,5 +1,6 @@
 package com.example.microgram.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 
 public class UserDto {
-    private String userName;
+    private String username;
     private String name;
     private String email;
     private String password;

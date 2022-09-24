@@ -1,6 +1,7 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.UserDto;
+import com.example.microgram.Entity.User;
 import com.example.microgram.Utility.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -44,11 +45,11 @@ public class UserDao {
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), email);
     }
 
-    public String ifExists(String email) {
+    public boolean ifExistsEmail(String email) {
         String query = "select count(id) from users\n" +
                 "where email = ?";
         var result = jdbcTemplate.queryForObject(query, Integer.class, email);
-        return result == 1 ? "Пользователь есть в системе" : "Пользователя нету в системе";
+        return result == 1;
     }
 
     public List<UserDto> getFollowersByUsername(String username) {
@@ -106,5 +107,43 @@ public class UserDao {
             });
         }
         System.out.println("inserted " + users.size() + " rows into 'users'");
+    }
+
+    public String createNewUser(User user) {
+        if (!ifExists(user)) {
+            String query = "INSERT INTO users(username, name, email, password)\n" +
+                    "VALUES(?, ?, ?, ?)";
+            var sm = jdbcTemplate.update(query,
+                    user.getUsername(), user.getName(), user.getEmail(), user.getPassword());
+            return "Регистрация прошла успешно!";
+        }
+        return "Не удалось завершить регистрацию!\n" +
+                "Такое имя пользователя или электронная почта существует!";
+    }
+
+    public String loginByUsername(User user) {
+        if (ifExistsUsername(user.getUsername())) {
+            var userDto = getUserByUsername(user.getUsername()).get(0);
+
+            if (userDto.getPassword().equals(user.getPassword()))
+                return "Вы успешно авторизовались!";
+            return "Неверный пароль!";
+        }
+        return "Неверное имя пользователя!";
+    }
+
+    private boolean ifExists(User user) {
+        if (ifExistsEmail(user.getEmail()))
+            return true;
+        if (ifExistsUsername(user.getUsername()))
+            return true;
+        return false;
+    }
+
+    private boolean ifExistsUsername(String username) {
+        String query = "select count(id) from users\n" +
+                "where username = ?";
+        var result = jdbcTemplate.queryForObject(query, Integer.class, username);
+        return result == 1;
     }
 }

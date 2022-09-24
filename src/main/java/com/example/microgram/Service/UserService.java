@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public String isRegistered(String email) {
-        return userDao.ifExists(email);
+        return userDao.ifExistsEmail(email) ? "Пользователь есть в системе" : "Пользователя нету в системе";
     }
 
     public List<UserDto> getFollowersByUsername(String username) {
