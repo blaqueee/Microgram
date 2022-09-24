@@ -130,18 +130,18 @@ public class UserDao {
         return false;
     }
 
+    public boolean ifExistsUsername(String username) {
+        String query = "select count(id) from users\n" +
+                "where username = ?";
+        var result = jdbcTemplate.queryForObject(query, Integer.class, username);
+        return result == 1;
+    }
+
     private boolean ifExists(User user) {
         if (ifExistsEmail(user.getEmail()))
             return true;
         if (ifExistsUsername(user.getUsername()))
             return true;
         return false;
-    }
-
-    private boolean ifExistsUsername(String username) {
-        String query = "select count(id) from users\n" +
-                "where username = ?";
-        var result = jdbcTemplate.queryForObject(query, Integer.class, username);
-        return result == 1;
     }
 }

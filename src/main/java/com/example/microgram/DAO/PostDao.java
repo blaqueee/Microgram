@@ -1,6 +1,8 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.PostDto;
+import com.example.microgram.DTO.PostUserDto;
+import com.example.microgram.Entity.Post;
 import com.example.microgram.Utility.DataGenerator.PostExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -70,5 +73,18 @@ public class PostDao {
             });
         }
         System.out.println("inserted " + posts.size() + " rows into 'posts'");
+    }
+
+    public PostDto createPost(PostUserDto post) {
+        LocalDateTime ld = LocalDateTime.now();
+        String query = "INSERT INTO posts(image, description, time, user_id)\n" +
+                "VALUES(?, ?, ?, (select id from users where username = ?))";
+        jdbcTemplate.update(query, post.getImage(), post.getDescription(), Timestamp.valueOf(ld), post.getUsername());
+        return PostDto.builder()
+                .image(post.getImage())
+                .description(post.getDescription())
+                .time(ld)
+                .comments(0)
+                .build();
     }
 }

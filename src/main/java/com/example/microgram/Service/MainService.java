@@ -3,11 +3,10 @@ package com.example.microgram.Service;
 import com.example.microgram.DAO.UserDao;
 import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
-import com.example.microgram.Utility.Utils;
+import com.example.microgram.Utility.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -35,17 +34,9 @@ public class MainService {
         );
 
         if (isAuthorized) {
-            var cookie = createCookie(userDto.getUsername());
-            response.addCookie(cookie);
+            CookieUtil.addCookie(userDto, response);
             return "Вы успешно авторизовались!";
         }
-        return  "Неверное имя пользователя или пароль!";
-    }
-
-    private Cookie createCookie(String username) {
-        Cookie cookie = new Cookie("authorized", Utils.encode(username, username.length()));
-        cookie.setMaxAge(600);
-        cookie.setHttpOnly(true);
-        return cookie;
+        return "Неверное имя пользователя или пароль!";
     }
 }
