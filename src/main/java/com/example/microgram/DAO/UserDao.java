@@ -2,7 +2,7 @@ package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
-import com.example.microgram.Utility.UserEnum;
+import com.example.microgram.Utility.DataGenerator.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -121,15 +121,13 @@ public class UserDao {
                 "Такое имя пользователя или электронная почта существует!";
     }
 
-    public String loginByUsername(User user) {
+    public boolean loginByUsername(User user) {
         if (ifExistsUsername(user.getUsername())) {
             var userDto = getUserByUsername(user.getUsername()).get(0);
-
             if (userDto.getPassword().equals(user.getPassword()))
-                return "Вы успешно авторизовались!";
-            return "Неверный пароль!";
+                return true;
         }
-        return "Неверное имя пользователя!";
+        return false;
     }
 
     private boolean ifExists(User user) {

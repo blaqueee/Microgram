@@ -1,4 +1,4 @@
-package com.example.microgram.Utility;
+package com.example.microgram.Utility.DataGenerator;
 
 import com.example.microgram.DAO.*;
 import org.springframework.context.annotation.Bean;

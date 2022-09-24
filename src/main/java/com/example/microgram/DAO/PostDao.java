@@ -1,7 +1,7 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.PostDto;
-import com.example.microgram.Utility.PostExample;
+import com.example.microgram.Utility.DataGenerator.PostExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

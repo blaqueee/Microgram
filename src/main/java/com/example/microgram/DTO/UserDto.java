@@ -1,6 +1,5 @@
 package com.example.microgram.DTO;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
 

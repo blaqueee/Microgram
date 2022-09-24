@@ -5,10 +5,10 @@ import com.example.microgram.Service.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/")
@@ -22,7 +22,7 @@ public class MainController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginByUsername(@RequestBody UserDto userDto) {
-        return new ResponseEntity<>(service.loginByUsername(userDto), HttpStatus.OK);
+    public ResponseEntity<String> loginByUsername(@RequestBody UserDto userDto, HttpServletResponse response) {
+        return new ResponseEntity<>(service.loginByUsername(userDto, response), HttpStatus.OK);
     }
 }

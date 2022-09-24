@@ -1,4 +1,4 @@
-package com.example.microgram.Utility;
+package com.example.microgram.Utility.DataGenerator;
 
 public enum UserEnum {
     FIRST("blaque", "Kairat", "co453289@gmail.com", "12345678"),

@@ -1,6 +1,6 @@
 package com.example.microgram.DAO;
 
-import com.example.microgram.Utility.CommentExample;
+import com.example.microgram.Utility.DataGenerator.CommentExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
