@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Post {
+    private Long id;
     private String image;
     private String description;
     private LocalDateTime time;

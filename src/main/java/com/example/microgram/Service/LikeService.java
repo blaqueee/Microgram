@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class LikeService {
     private final LikeDao likeDao;
 
-    public String ifUserLiked(String username, int postID) {
+    public String ifUserLiked(String username, Long postID) {
         return likeDao.ifUserLiked(username, postID);
     }
 

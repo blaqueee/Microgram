@@ -15,7 +15,7 @@ import java.util.List;
 public class LikeDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public String ifUserLiked(String username, int postID) {
+    public String ifUserLiked(String username, Long postID) {
         String query = "select count(l.id) from likes l\n" +
                 "inner join users u on u.id = l.user_id\n" +
                 "where u.username = ? and l.post_id = ?";

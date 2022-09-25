@@ -35,4 +35,11 @@ public class PostUserService {
                 )
         );
     }
+
+    public String deletePost(Long postID, HttpServletRequest request) {
+        var username = CookieUtil.getUsernameFromCookie(request);
+        if (username.isEmpty() || !userDao.ifExistsUsername(username.get()))
+            return "Вы должны авторизоваться, чтобы удалить пост!";
+        return postDao.deletePost(postID, username.get());
+    }
 }

@@ -16,7 +16,7 @@ public class LikeController {
     private final LikeService service;
 
     @GetMapping("/{username}/{postID}") // проверка лайка пользователя определенного поста
-    public ResponseEntity<String> ifUserLikedThisPost(@PathVariable String username, @PathVariable int postID) {
+    public ResponseEntity<String> ifUserLikedThisPost(@PathVariable String username, @PathVariable Long postID) {
         return new ResponseEntity<>(service.ifUserLiked(username, postID), HttpStatus.OK);
     }
 }

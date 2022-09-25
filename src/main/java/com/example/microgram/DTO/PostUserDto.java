@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class PostUserDto {
+    private Long id;
     private String image;
     private String description;
     private String username;

@@ -26,6 +26,11 @@ public class PostController {
                 new ResponseEntity<>("Вы должны войти в аккаунт, чтобы добавить пост!", HttpStatus.CONFLICT);
     }
 
+    @DeleteMapping("/{postID}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postID, HttpServletRequest request) {
+        return new ResponseEntity<>(postUserService.deletePost(postID, request), HttpStatus.OK);
+    }
+
     @GetMapping("/{username}") // увидеть посты пользователя по имени пользователя
     public ResponseEntity<List<PostDto>> getPostsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(postService.getPostsByUsername(username), HttpStatus.OK);

@@ -25,7 +25,7 @@ public class CommentDao {
                 "(\n" +
                 "    id serial primary key not null,\n" +
                 "    post_id integer not null references posts (id),\n" +
-                "    user_id integer not null references posts (id),\n" +
+                "    user_id integer not null references users (id),\n" +
                 "    text text not null,\n" +
                 "    time timestamp without time zone not null\n" +
                 ");\n";
