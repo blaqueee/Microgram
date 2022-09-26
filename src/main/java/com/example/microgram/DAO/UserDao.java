@@ -137,6 +137,11 @@ public class UserDao {
         return result == 1;
     }
 
+    public Long getIdByUsername(String username) {
+        String query = "SELECT id FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(query, Long.class, username);
+    }
+
     private boolean ifExists(User user) {
         if (ifExistsEmail(user.getEmail()))
             return true;

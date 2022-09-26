@@ -20,6 +20,10 @@ public class PostController {
     private final PostUserService postUserService;
 
     @PostMapping
+    /* Пост отправляется в виде form_data
+            image   ->   (файл)
+            description  ->  (текст)
+     */
     public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, HttpServletRequest request) {
         var post = postUserService.createPost(image, description, request);
         return post.isPresent() ?

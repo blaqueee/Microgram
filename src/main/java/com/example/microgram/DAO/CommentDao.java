@@ -1,5 +1,6 @@
 package com.example.microgram.DAO;
 
+import com.example.microgram.DTO.CommentDto;
 import com.example.microgram.Utility.DataGenerator.CommentExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -47,5 +49,33 @@ public class CommentDao {
             });
         }
         System.out.println( "inserted " + comments.size() + " rows into 'comments'");
+    }
+
+    public String addComment(CommentDto commentDto, Long userID) {
+        LocalDateTime ld = LocalDateTime.now();
+        String query = "INSERT INTO comments(post_id, user_id, text, time)\n" +
+                "VALUES(?, ?, ?, ?)";
+        jdbcTemplate.update(query,
+                commentDto.getPostID(),
+                userID,
+                commentDto.getText(),
+                ld
+        );
+        return "Комментарий успешно добавлен!";
+    }
+
+    public String deleteComment(Long commentID) {
+        if (ifExistsById(commentID)) {
+            String query = "DELETE FROM comments WHERE id = ?";
+            jdbcTemplate.update(query, commentID);
+            return "Комментарий успешно удален!";
+        }
+        return "Не существующий комментарий!";
+    }
+
+    private boolean ifExistsById(Long commentID) {
+        String query = "SELECT COUNT(id) FROM comments WHERE id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, commentID);
+        return count == 1;
     }
 }

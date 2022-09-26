@@ -2,8 +2,6 @@ package com.example.microgram.Service;
 
 import com.example.microgram.DAO.PostDao;
 import com.example.microgram.DAO.UserDao;
-import com.example.microgram.DTO.PostDto;
-import com.example.microgram.DTO.PostUserDto;
 import com.example.microgram.DTO.PostUserImageDto;
 import com.example.microgram.Utility.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
