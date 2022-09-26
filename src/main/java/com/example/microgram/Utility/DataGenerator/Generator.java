@@ -3,6 +3,14 @@ package com.example.microgram.Utility.DataGenerator;
 import com.example.microgram.DAO.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +52,13 @@ public class Generator {
 
     private List<PostExample> generatePosts() {
         List<PostExample> posts = new ArrayList<>();
-        posts.add(new PostExample("anon.jpeg", "nonsense", LocalDateTime.now(), 1));
-        posts.add(new PostExample("me.jpeg", "Just me! :D", LocalDateTime.now(), 2));
-        posts.add(new PostExample("myface.jpeg", "Just for Fun", LocalDateTime.now(), 4));
-        posts.add(new PostExample("car.jpeg", "Bought a new car", LocalDateTime.now(), 4));
-        posts.add(new PostExample("paris.jpeg", "Finally got to Paris", LocalDateTime.now(), 5));
-        posts.add(new PostExample("university.jpeg", "Entered this university", LocalDateTime.now(), 5));
-        posts.add(new PostExample("autumn.jpeg", "It's pretty fall, isn't it?", LocalDateTime.now(), 2));
+        posts.add(new PostExample("2901122484.jpg", "nonsense", LocalDateTime.now(), 1));
+        posts.add(new PostExample("2901122484.jpg", "Just me! :D", LocalDateTime.now(), 2));
+        posts.add(new PostExample("2901122484.jpg", "Just for Fun", LocalDateTime.now(), 4));
+        posts.add(new PostExample("2901122484.jpg", "Bought a new car", LocalDateTime.now(), 4));
+        posts.add(new PostExample("2901122484.jpg", "Finally got to Paris", LocalDateTime.now(), 5));
+        posts.add(new PostExample("2901122484.jpg", "Entered this university", LocalDateTime.now(), 5));
+        posts.add(new PostExample("2901122484.jpg", "It's pretty fall, isn't it?", LocalDateTime.now(), 2));
         return posts;
     }
 

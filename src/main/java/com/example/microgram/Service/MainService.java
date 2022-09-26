@@ -15,6 +15,15 @@ public class MainService {
     private final UserDao userDao;
 
     public String createNewUser(UserDto userDto) {
+        if (userDto.getUsername() == null)
+            return "Пустое имя пользователя!";
+        if (userDto.getName() == null)
+            return "Пустое имя!";
+        if (userDto.getEmail() == null)
+            return "Нету электронной почты!";
+        if (userDto.getPassword() == null)
+            return "Регистрация без пароли невозможна!";
+
         return userDao.createNewUser(
                 User.builder()
                 .username(userDto.getUsername())

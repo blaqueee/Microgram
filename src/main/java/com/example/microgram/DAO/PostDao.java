@@ -2,13 +2,20 @@ package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.PostDto;
 import com.example.microgram.DTO.PostUserDto;
-import com.example.microgram.Entity.Post;
+import com.example.microgram.DTO.PostUserImageDto;
 import com.example.microgram.Utility.DataGenerator.PostExample;
+import com.example.microgram.Utility.FileUtil;
+import com.example.microgram.Utility.Utils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -75,13 +82,20 @@ public class PostDao {
         System.out.println("inserted " + posts.size() + " rows into 'posts'");
     }
 
-    public PostDto createPost(PostUserDto post) {
+    public PostDto createPost(PostUserImageDto post) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO posts(image, description, time, user_id)\n" +
                 "VALUES(?, ?, ?, ?)";
-        jdbcTemplate.update(query, post.getImage(), post.getDescription(), Timestamp.valueOf(ld), getUserIdByUsername(post.getUsername()));
+        String fileName = FileUtil.createFileFromMultipartFile(
+                post.getImageFile(),
+                getAmountOfPostsByUsername(post.getUsername()) + 1,
+                post.getUsername()
+        );
+        jdbcTemplate.update(query, fileName, post.getDescription(), Timestamp.valueOf(ld), getUserIdByUsername(post.getUsername()));
+
         return PostDto.builder()
-                .image(post.getImage())
+                .id(getUserIdByUsername(post.getUsername()))
+                .image(fileName)
                 .description(post.getDescription())
                 .time(ld)
                 .comments(0)
@@ -96,6 +110,11 @@ public class PostDao {
                 "WHERE id = ? AND user_id = ?";
         jdbcTemplate.update(query, postID, getUserIdByUsername(username));
         return "Вы успешно удалили публикацию!";
+    }
+
+    public Integer getAmountOfPostsByUsername(String username) {
+        var list = getPostsByUsername(username);
+        return list.size();
     }
 
     private boolean isPostOwner(Long postID, String username) {

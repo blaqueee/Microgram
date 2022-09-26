@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,8 +20,8 @@ public class PostController {
     private final PostUserService postUserService;
 
     @PostMapping
-    public ResponseEntity<?> addPost(@RequestBody PostDto postDto, HttpServletRequest request) {
-        var post = postUserService.createPost(postDto, request);
+    public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, HttpServletRequest request) {
+        var post = postUserService.createPost(image, description, request);
         return post.isPresent() ?
                 new ResponseEntity<>(post.get(), HttpStatus.OK) :
                 new ResponseEntity<>("Вы должны войти в аккаунт, чтобы добавить пост!", HttpStatus.CONFLICT);

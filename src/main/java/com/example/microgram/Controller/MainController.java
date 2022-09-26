@@ -16,11 +16,26 @@ public class MainController {
     private final MainService service;
 
     @PostMapping("/register")
+    /* Регистрация отправляется в таком виде
+        {
+            "username": "blaque",
+            "name": "Halo",
+            "email": "bla@bla.bla",
+            "password": "12345678"
+        }
+     */
     public ResponseEntity<String> createNewUser(@RequestBody UserDto userDto) {
         return new ResponseEntity<>(service.createNewUser(userDto), HttpStatus.OK);
     }
 
+
     @PostMapping("/login")
+    /* Логин отправляется в таком виде
+        {
+            "username": "blaque",
+            "password": "12345678"
+        }
+     */
     public ResponseEntity<String> loginByUsername(@RequestBody UserDto userDto, HttpServletResponse response) {
         return new ResponseEntity<>(service.loginByUsername(userDto, response), HttpStatus.OK);
     }
