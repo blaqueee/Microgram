@@ -1,4 +1,4 @@
-package com.example.microgram.DataGenerator;
+package com.example.microgram.Utility.DataGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

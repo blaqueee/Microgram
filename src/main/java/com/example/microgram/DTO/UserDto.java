@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 
 public class UserDto {
-    private String userName;
+    private String username;
     private String name;
     private String email;
     private String password;
