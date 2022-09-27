@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -45,5 +46,20 @@ public class SubscriptionDao {
             });
         }
         System.out.println("inserted " + subs.size() + " rows into 'subscriptions'");
+    }
+
+    public String follow(Long userID, Long followerID) {
+        if (isFollower(userID, followerID))
+            return "Вы уже подписаны на этого пользователя!";
+        String query = "INSERT INTO subscriptions(user_id, follower_id, time)\n" +
+                "VALUES(?, ?, ?)";
+        jdbcTemplate.update(query, userID, followerID, LocalDateTime.now());
+        return "Вы успешно подписались на пользователя!";
+    }
+
+    public boolean isFollower(Long userID, Long followerID) {
+        String query = "SELECT COUNT(*) FROM subscriptions WHERE user_id = ? AND follower_id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, userID, followerID);
+        return count == 1;
     }
 }

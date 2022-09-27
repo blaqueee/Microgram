@@ -142,6 +142,12 @@ public class UserDao {
         return jdbcTemplate.queryForObject(query, Long.class, username);
     }
 
+    public boolean ifExistsId(Long id) {
+        String query = "SELECT COUNT(*) FROM users WHERE id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, id);
+        return count == 1;
+    }
+
     private boolean ifExists(User user) {
         if (ifExistsEmail(user.getEmail()))
             return true;
