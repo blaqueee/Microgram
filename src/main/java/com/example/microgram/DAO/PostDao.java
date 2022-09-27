@@ -116,6 +116,12 @@ public class PostDao {
         return list.size();
     }
 
+    public boolean ifExistsId(Long id) {
+        String query = "SELECT COUNT(*) FROM posts WHERE id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, id);
+        return count == 1;
+    }
+
     public boolean isPostOwner(Long postID, String username) {
         String query = "SELECT COUNT(id) FROM POSTS\n" +
                 "WHERE id = ? AND user_id = ?;";

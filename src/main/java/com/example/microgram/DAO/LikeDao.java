@@ -1,5 +1,6 @@
 package com.example.microgram.DAO;
 
+import com.example.microgram.DTO.LikeDto;
 import com.example.microgram.Utility.DataGenerator.LikeExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -54,5 +56,18 @@ public class LikeDao {
             });
         }
         System.out.println("inserted " + likes.size() + " rows into 'likes'");
+    }
+
+    public String likePost(LikeDto likeDto) {
+        String query = "INSERT INTO likes(user_id, post_id, time)\n" +
+                "VALUES(?, ?, ?)";
+        jdbcTemplate.update(query, likeDto.getUserId(), likeDto.getPostId(), LocalDateTime.now());
+        return "Вы успешно лайкнули этот пост!";
+    }
+
+    public boolean ifUserLikedPost(Long userID, Long postID) {
+        String query = "SELECT COUNT(*) FROM likes WHERE user_id = ? AND post_id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, userID, postID);
+        return count == 1;
     }
 }
