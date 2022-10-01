@@ -6,6 +6,8 @@ import com.example.microgram.Utility.DataGenerator.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
@@ -15,6 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDao {
     private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
     private final String queryTemp = "select u.id,\n" +
             "       u.username,\n" +
             "       u.name,\n" +
@@ -80,6 +84,12 @@ public class UserDao {
         System.out.println("dropped table 'users'");
     }
 
+    public void dropTableAuthorities() {
+        String query = "DROP TABLE IF EXISTS authorities";
+        jdbcTemplate.execute(query);
+        System.out.println("dropped table 'authorities'");
+    }
+
     public void createTableUsers() {
         String query = "create table users\n" +
                 "(\n" +
@@ -87,44 +97,70 @@ public class UserDao {
                 "    username varchar(20) not null,\n" +
                 "    name varchar(20) not null,\n" +
                 "    email varchar(45) not null,\n" +
-                "    password varchar(45) not null\n" +
+                "    password varchar not null," +
+                "    enabled boolean not null\n" +
                 ");\n";
         jdbcTemplate.update(query);
         System.out.println("created table 'users'");
     }
 
+    public void createTableAuthorities() {
+        String query = "CREATE TABLE authorities\n" +
+                "(\n" +
+                "    id serial primary key not null,\n" +
+                "    user_id integer not null references users (id),\n" +
+                "    authority text not null\n" +
+                ");";
+        jdbcTemplate.update(query);
+        System.out.println("created table 'authorities'");
+    }
+
     public void insertUsers(List<UserEnum> users) {
-        String query = "INSERT INTO users(username, name, email, password)\n" +
-                "VALUES(?, ?, ?, ?)";
-        for (UserEnum user : users) {
+        String query = "INSERT INTO users(username, name, email, password, enabled)\n" +
+                "VALUES(?, ?, ?, ?, ?)";
+        String queryAuth = "INSERT INTO authorities(user_id, authority)" +
+                "VALUES(?, ?)";
+        for (int i = 0; i < users.size(); i++) {
+            int finalI = i;
             jdbcTemplate.update(conn -> {
                 PreparedStatement ps = conn.prepareStatement(query);
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getName());
-                ps.setString(3, user.getEmail());
-                ps.setString(4, user.getPassword());
+                ps.setString(1, users.get(finalI).getUsername());
+                ps.setString(2, users.get(finalI).getName());
+                ps.setString(3, users.get(finalI).getEmail());
+                ps.setString(4, encoder.encode(users.get(finalI).getPassword()));
+                ps.setBoolean(5, users.get(finalI).isEnabled());
                 return ps;
             });
+            jdbcTemplate.update(queryAuth, finalI + 1, "ROLE_USER");
         }
         System.out.println("inserted " + users.size() + " rows into 'users'");
     }
 
     public String createNewUser(User user) {
         if (!ifExists(user)) {
-            String query = "INSERT INTO users(username, name, email, password)\n" +
-                    "VALUES(?, ?, ?, ?)";
+            String query = "INSERT INTO users(username, name, email, password, enabled)\n" +
+                    "VALUES(?, ?, ?, ?, true)";
             var sm = jdbcTemplate.update(query,
-                    user.getUsername(), user.getName(), user.getEmail(), user.getPassword());
+                    user.getUsername(), user.getName(), user.getEmail(), encoder.encode(user.getPassword()));
+            createAuthority(user.getUsername());
             return "Регистрация прошла успешно!";
         }
         return "Не удалось завершить регистрацию!\n" +
                 "Такое имя пользователя или электронная почта существует!";
     }
 
+    private void createAuthority(String username) {
+        var userID = getIdByUsername(username);
+        String query = "INSERT INTO authorities(user_id, authority)" +
+                "VALUES(?, 'ROLE_USER')";
+        jdbcTemplate.update(query, userID);
+    }
+
     public boolean loginByUsername(User user) {
+        var password = encoder.encode(user.getPassword());
         if (ifExistsUsername(user.getUsername())) {
             var userDto = getUserByUsername(user.getUsername()).get(0);
-            if (userDto.getPassword().equals(user.getPassword()))
+            if (userDto.getPassword().equals(password))
                 return true;
         }
         return false;
