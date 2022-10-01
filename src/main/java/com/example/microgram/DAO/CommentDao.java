@@ -64,8 +64,8 @@ public class CommentDao {
         return "Комментарий успешно добавлен!";
     }
 
-    public String deleteComment(Long commentID) {
-        if (ifExistsById(commentID)) {
+    public String deleteComment(Long commentID, Long postID) {
+        if (ifExistsById(commentID, postID)) {
             String query = "DELETE FROM comments WHERE id = ?";
             jdbcTemplate.update(query, commentID);
             return "Комментарий успешно удален!";
@@ -73,9 +73,9 @@ public class CommentDao {
         return "Не существующий комментарий!";
     }
 
-    private boolean ifExistsById(Long commentID) {
-        String query = "SELECT COUNT(id) FROM comments WHERE id = ?";
-        var count = jdbcTemplate.queryForObject(query, Integer.class, commentID);
+    private boolean ifExistsById(Long commentID, Long postID) {
+        String query = "SELECT COUNT(id) FROM comments WHERE id = ? AND post_id = ?";
+        var count = jdbcTemplate.queryForObject(query, Integer.class, commentID, postID);
         return count == 1;
     }
 }

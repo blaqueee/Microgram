@@ -6,9 +6,8 @@ import com.example.microgram.Service.CommentPostUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/comments")
@@ -18,15 +17,16 @@ public class CommentController {
     private final CommentPostUserService commentPostUserService;
 
     @PostMapping("/{postID}")
-    public ResponseEntity<String> addComment(@RequestBody CommentDto commentDto, HttpServletRequest request,
-                                             @PathVariable Long postID) {
+    public ResponseEntity<String> addComment(@RequestBody CommentDto commentDto,
+                                             @PathVariable Long postID, Authentication auth) {
         commentDto.setPostID(postID);
-        return new ResponseEntity<>(commentPostUserService.addComment(commentDto, request), HttpStatus.OK);
+        return new ResponseEntity<>(commentPostUserService.addComment(commentDto, auth), HttpStatus.OK);
     }
 
     @DeleteMapping("/{postID}/{commentID}")
-    public ResponseEntity<String> deleteComment(@PathVariable Long postID, @PathVariable Long commentID, HttpServletRequest request) {
-        return new ResponseEntity<>(commentPostUserService.deleteComment(postID, commentID, request), HttpStatus.OK);
+    public ResponseEntity<String> deleteComment(@PathVariable Long postID, @PathVariable Long commentID, Authentication authentication) {
+        return new ResponseEntity<>(
+                commentPostUserService.deleteComment(postID, commentID, authentication), HttpStatus.OK);
     }
 
 }

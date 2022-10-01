@@ -23,6 +23,7 @@ public class Generator {
         likeDao.dropTable();
         commentDao.dropTable();
         postDao.dropTable();
+        userDao.dropTableAuthorities();
         userDao.dropTable();
     }
 
@@ -36,6 +37,7 @@ public class Generator {
 
     private void createTables(UserDao userDao, PostDao postDao, CommentDao commentDao, LikeDao likeDao, SubscriptionDao subscriptionDao) {
         userDao.createTableUsers();
+        userDao.createTableAuthorities();
         postDao.createTablePosts();
         commentDao.createTableComments();
         likeDao.createTableLikes();

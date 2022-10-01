@@ -6,6 +6,7 @@ import com.example.microgram.Service.PostUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,16 +25,16 @@ public class PostController {
             image   ->   (файл)
             description  ->  (текст)
      */
-    public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, HttpServletRequest request) {
-        var post = postUserService.createPost(image, description, request);
+    public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, Authentication auth) {
+        var post = postUserService.createPost(image, description, auth);
         return post.isPresent() ?
                 new ResponseEntity<>(post.get(), HttpStatus.OK) :
                 new ResponseEntity<>("Вы должны войти в аккаунт, чтобы добавить пост!", HttpStatus.CONFLICT);
     }
 
     @DeleteMapping("/{postID}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postID, HttpServletRequest request) {
-        return new ResponseEntity<>(postUserService.deletePost(postID, request), HttpStatus.OK);
+    public ResponseEntity<?> deletePost(@PathVariable Long postID, Authentication auth) {
+        return new ResponseEntity<>(postUserService.deletePost(postID, auth), HttpStatus.OK);
     }
 
     @GetMapping("/{username}") // увидеть посты пользователя по имени пользователя

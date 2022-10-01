@@ -6,9 +6,9 @@ import com.example.microgram.Service.LikeUserPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/likes")
@@ -28,7 +28,7 @@ public class LikeController {
                 "post_id": 3
              }
      */
-    public ResponseEntity<String> likePost(@RequestBody LikeDto likeDto, HttpServletRequest request) {
-        return new ResponseEntity<>(likeUserPostService.likePost(likeDto, request), HttpStatus.OK);
+    public ResponseEntity<String> likePost(@RequestBody LikeDto likeDto, Authentication auth) {
+        return new ResponseEntity<>(likeUserPostService.likePost(likeDto, auth), HttpStatus.OK);
     }
 }
