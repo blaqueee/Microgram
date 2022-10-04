@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final DataSource dataSource;
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,16 +41,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/likes",
+                .antMatchers(HttpMethod.POST, "/likes/**",
                         "/comments/**",
-                        "/posts",
-                        "/subscriptions").fullyAuthenticated()
+                        "/posts/**",
+                        "/subscriptions/**").fullyAuthenticated()
                 .antMatchers(HttpMethod.DELETE, "/comments/**",
-                        "/posts/*").fullyAuthenticated();
+                        "/posts/**").fullyAuthenticated();
 
-        http.authorizeRequests()
-                .anyRequest()
-                .permitAll();
+        http.authorizeRequests().anyRequest().permitAll();
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic();
         http.formLogin().disable().logout().disable();
