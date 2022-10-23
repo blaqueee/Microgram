@@ -1,12 +1,14 @@
 package com.example.microgram.DTO;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentDto {
     private Long id;
     private String text;

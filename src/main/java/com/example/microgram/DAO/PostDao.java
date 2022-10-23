@@ -1,5 +1,6 @@
 package com.example.microgram.DAO;
 
+import com.example.microgram.DAO.Mappers.PostMapper;
 import com.example.microgram.DTO.PostDto;
 import com.example.microgram.DTO.PostUserImageDto;
 import com.example.microgram.Utility.DataGenerator.PostExample;
@@ -7,12 +8,16 @@ import com.example.microgram.Utility.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -21,24 +26,20 @@ public class PostDao {
     private final JdbcTemplate jdbcTemplate;
 
     public List<PostDto> getPostsByUsername(String username) {
-        String query = "select p.id, p.image, p.description, p.time, " +
-                "(select count(id)\n" +
-                "from comments c where c.post_id = p.id) comments\n" +
+        String query = "select p.id, p.image, p.description, p.time, p.user_id " +
                 "from posts p\n" +
                 "inner join users u on p.user_id = u.id\n" +
                 "where u.username = ?";
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(PostDto.class), username);
+        return jdbcTemplate.query(query, new PostMapper(jdbcTemplate), username);
     }
 
     public List<PostDto> getReelsByUsername(String username) {
-        String query = "select p.id, p.image, p.description, p.time,\n" +
-                "(select count(id)\n" +
-                "from comments c where c.post_id = p.id) comments\n" +
+        String query = "select p.id, p.image, p.description, p.time, p.user_id \n" +
                 "from posts p\n" +
                 "inner join subscriptions s on s.user_id = p.user_id\n" +
                 "inner join users u on u.id = s.follower_id\n" +
                 "where u.username = ?";
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(PostDto.class), username);
+        return jdbcTemplate.query(query, new PostMapper(jdbcTemplate), username);
     }
 
     public void dropTable() {
@@ -85,13 +86,22 @@ public class PostDao {
                 getAmountOfPostsByUsername(post.getUsername()) + 1,
                 post.getUsername()
         );
-        jdbcTemplate.update(query, fileName, post.getDescription(), Timestamp.valueOf(ld), getUserIdByUsername(post.getUsername()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            ps.setString(1, fileName);
+            ps.setString(2, post.getDescription());
+            ps.setTimestamp(3, Timestamp.valueOf(ld));
+            ps.setLong(4, getUserIdByUsername(post.getUsername()));
+            return ps;
+        }, keyHolder);
 
         return PostDto.builder()
-                .id(getIdByImage(fileName))
+                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
                 .image(fileName)
                 .description(post.getDescription())
                 .time(ld)
+                .comments(new ArrayList<>())
                 .build();
     }
 

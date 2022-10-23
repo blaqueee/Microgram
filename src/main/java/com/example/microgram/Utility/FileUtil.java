@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileUtil {
-    private static final String postsDir = "src/main/resources/static/";
+    private static final String postsDir = "/Users/blaque/Documents/Attractor_School/Java(month 8)/Homeworks/homework_js/images/";
 
     public static String createFileFromMultipartFile(MultipartFile multipartFile, int postID, String username) {
         byte[] data = getBytesFromMultipartFile(multipartFile);

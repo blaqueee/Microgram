@@ -27,7 +27,7 @@ public class CommentDao {
     public void createTableComments() {
         String query = "create table comments\n" +
                 "(\n" +
-                "    id serial primary key not null,\n" +
+                "    id bigserial primary key not null,\n" +
                 "    post_id integer not null references posts (id),\n" +
                 "    user_id integer not null references users (id),\n" +
                 "    text text not null,\n" +
