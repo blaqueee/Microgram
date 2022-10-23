@@ -1,6 +1,5 @@
 package com.example.microgram.DTO;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +10,6 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private String text;
+    private UserDto commentator;
     private LocalDateTime time;
-
-    @JsonProperty("post_id")
-    private Long postID;
 }

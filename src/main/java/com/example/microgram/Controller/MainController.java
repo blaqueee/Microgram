@@ -1,6 +1,6 @@
 package com.example.microgram.Controller;
 
-import com.example.microgram.DTO.UserDto;
+import com.example.microgram.Entity.User;
 import com.example.microgram.Service.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class MainController {
             "password": "12345678"
         }
      */
-    public ResponseEntity<String> createNewUser(@RequestBody UserDto userDto) {
-        return new ResponseEntity<>(service.createNewUser(userDto), HttpStatus.OK);
+    public ResponseEntity<String> createNewUser(@RequestBody User user) {
+        return new ResponseEntity<>(service.createNewUser(user), HttpStatus.OK);
     }
 }

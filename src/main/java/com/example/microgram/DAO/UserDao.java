@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -156,16 +157,6 @@ public class UserDao {
         jdbcTemplate.update(query, userID);
     }
 
-    public boolean loginByUsername(User user) {
-        var password = encoder.encode(user.getPassword());
-        if (ifExistsUsername(user.getUsername())) {
-            var userDto = getUserByUsername(user.getUsername()).get(0);
-            if (userDto.getPassword().equals(password))
-                return true;
-        }
-        return false;
-    }
-
     public boolean ifExistsUsername(String username) {
         String query = "select count(id) from users\n" +
                 "where username = ?";
@@ -182,6 +173,11 @@ public class UserDao {
         String query = "SELECT COUNT(*) FROM users WHERE id = ?";
         var count = jdbcTemplate.queryForObject(query, Integer.class, id);
         return count == 1;
+    }
+
+    public Optional<UserDto> getUserDtoById(Long id) {
+        String query = "SELECT * FROM users WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(UserDto.class), id));
     }
 
     private boolean ifExists(User user) {

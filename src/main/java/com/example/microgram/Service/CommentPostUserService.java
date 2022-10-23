@@ -4,6 +4,7 @@ import com.example.microgram.DAO.CommentDao;
 import com.example.microgram.DAO.PostDao;
 import com.example.microgram.DAO.UserDao;
 import com.example.microgram.DTO.CommentDto;
+import com.example.microgram.DTO.CommentForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,12 @@ public class CommentPostUserService {
     private final PostDao postDao;
     private final UserDao userDao;
 
-    public String addComment(CommentDto commentDto, Authentication auth) {
+    public String addComment(CommentForm commentForm, Authentication auth) {
         var username = auth.getName();
         if (!userDao.ifExistsUsername(username))
             return "Вы должны авторизоваться, чтобы добавить комментарий!";
-        return commentDao.addComment(commentDto, userDao.getIdByUsername(username));
+        commentForm.setUsername(username);
+        return commentDao.addComment(commentForm, userDao.getIdByUsername(username));
     }
 
     public String deleteComment(Long postID, Long commentID, Authentication auth) {

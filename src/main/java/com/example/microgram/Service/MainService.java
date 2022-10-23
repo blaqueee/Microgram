@@ -1,7 +1,6 @@
 package com.example.microgram.Service;
 
 import com.example.microgram.DAO.UserDao;
-import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,22 +10,13 @@ import org.springframework.stereotype.Service;
 public class MainService {
     private final UserDao userDao;
 
-    public String createNewUser(UserDto userDto) {
-        if (userDto.getUsername() == null)
-            return "Пустое имя пользователя!";
-        if (userDto.getName() == null)
-            return "Пустое имя!";
-        if (userDto.getEmail() == null)
-            return "Нету электронной почты!";
-        if (userDto.getPassword() == null)
-            return "Регистрация без пароли невозможна!";
-
+    public String createNewUser(User user) {
         return userDao.createNewUser(
                 User.builder()
-                .username(userDto.getUsername())
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .password(userDto.getPassword())
+                .username(user.getUsername())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
                 .build()
         );
     }

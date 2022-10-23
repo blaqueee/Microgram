@@ -1,8 +1,10 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.CommentDto;
+import com.example.microgram.DTO.CommentForm;
 import com.example.microgram.Utility.DataGenerator.CommentExample;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -51,14 +53,14 @@ public class CommentDao {
         System.out.println( "inserted " + comments.size() + " rows into 'comments'");
     }
 
-    public String addComment(CommentDto commentDto, Long userID) {
+    public String addComment(CommentForm commentForm, Long userID) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO comments(post_id, user_id, text, time)\n" +
                 "VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(query,
-                commentDto.getPostID(),
-                userID,
-                commentDto.getText(),
+                commentForm.getPostId(),
+                commentForm.getUserId(),
+                commentForm.getText(),
                 ld
         );
         return "Комментарий успешно добавлен!";
@@ -77,5 +79,10 @@ public class CommentDao {
         String query = "SELECT COUNT(id) FROM comments WHERE id = ? AND post_id = ?";
         var count = jdbcTemplate.queryForObject(query, Integer.class, commentID, postID);
         return count == 1;
+    }
+
+    public List<CommentDto> getCommentsByPostId(Long postId) {
+        String query = "SELECT * FROM comments where post_id = ?";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(CommentDto.class), postId);
     }
 }
