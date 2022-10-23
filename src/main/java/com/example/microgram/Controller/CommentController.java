@@ -1,6 +1,7 @@
 package com.example.microgram.Controller;
 
 import com.example.microgram.DTO.CommentDto;
+import com.example.microgram.DTO.CommentForm;
 import com.example.microgram.Service.CommentService;
 import com.example.microgram.Service.CommentPostUserService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,9 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentPostUserService commentPostUserService;
 
-    @PostMapping("/{postID}")
-    public ResponseEntity<String> addComment(@RequestBody CommentDto commentDto,
-                                             @PathVariable Long postID, Authentication auth) {
-        commentDto.setPostID(postID);
-        return new ResponseEntity<>(commentPostUserService.addComment(commentDto, auth), HttpStatus.OK);
+    @PostMapping()
+    public ResponseEntity<String> addComment(@RequestBody CommentForm commentForm, Authentication auth) {
+        return new ResponseEntity<>(commentPostUserService.addComment(commentForm, auth), HttpStatus.OK);
     }
 
     @DeleteMapping("/{postID}/{commentID}")

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,5 +17,5 @@ public class PostDto {
     private String image;
     private String description;
     private LocalDateTime time;
-    private Integer comments;
+    private List<CommentDto> comments;
 }

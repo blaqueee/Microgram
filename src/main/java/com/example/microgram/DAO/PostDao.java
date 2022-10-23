@@ -92,7 +92,6 @@ public class PostDao {
                 .image(fileName)
                 .description(post.getDescription())
                 .time(ld)
-                .comments(0)
                 .build();
     }
 
