@@ -2,6 +2,7 @@ package com.example.microgram.DAO;
 
 import com.example.microgram.DAO.Mappers.PostMapper;
 import com.example.microgram.DTO.PostDto;
+import com.example.microgram.DTO.PostForm;
 import com.example.microgram.DTO.PostUserImageDto;
 import com.example.microgram.Utility.DataGenerator.PostExample;
 import com.example.microgram.Utility.FileUtil;
@@ -77,14 +78,14 @@ public class PostDao {
         System.out.println("inserted " + posts.size() + " rows into 'posts'");
     }
 
-    public PostDto createPost(PostUserImageDto post) {
+    public PostDto createPost(PostForm post) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO posts(image, description, time, user_id)\n" +
                 "VALUES(?, ?, ?, ?)";
         String fileName = FileUtil.createFileFromMultipartFile(
-                post.getImageFile(),
-                getAmountOfPostsByUsername(post.getUsername()) + 1,
-                post.getUsername()
+                post.getFile(),
+                getAmountOfPostsById(post.getUserId()) + 1,
+                "userID_" + post.getUserId()
         );
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -92,7 +93,7 @@ public class PostDao {
             ps.setString(1, fileName);
             ps.setString(2, post.getDescription());
             ps.setTimestamp(3, Timestamp.valueOf(ld));
-            ps.setLong(4, getUserIdByUsername(post.getUsername()));
+            ps.setLong(4, post.getUserId());
             return ps;
         }, keyHolder);
 
@@ -123,6 +124,11 @@ public class PostDao {
     public Integer getAmountOfPostsByUsername(String username) {
         var list = getPostsByUsername(username);
         return list.size();
+    }
+
+    public Integer getAmountOfPostsById(Long id) {
+        String query = "SELECT COUNT(id) FROM posts where user_id = ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, id);
     }
 
     public boolean ifExistsId(Long id) {

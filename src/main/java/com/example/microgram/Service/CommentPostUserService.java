@@ -17,12 +17,13 @@ public class CommentPostUserService {
     private final PostDao postDao;
     private final UserDao userDao;
 
-    public String addComment(CommentForm commentForm, Authentication auth) {
-        var username = auth.getName();
-        if (!userDao.ifExistsUsername(username))
-            return "Вы должны авторизоваться, чтобы добавить комментарий!";
-        commentForm.setUsername(username);
-        return commentDao.addComment(commentForm, userDao.getIdByUsername(username));
+    public CommentDto addComment(CommentForm commentForm, Authentication auth) {
+//        var username = auth.getName();
+//        if (!userDao.ifExistsUsername(username))
+//            return "Вы должны авторизоваться, чтобы добавить комментарий!";
+        var comment = commentDao.addComment(commentForm);
+        comment.setCommentator(userDao.getUserDtoById(commentForm.getUserId()).get());
+        return comment;
     }
 
     public String deleteComment(Long postID, Long commentID, Authentication auth) {

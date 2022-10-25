@@ -2,6 +2,7 @@ package com.example.microgram.Service;
 
 import com.example.microgram.DAO.PostDao;
 import com.example.microgram.DAO.UserDao;
+import com.example.microgram.DTO.PostForm;
 import com.example.microgram.DTO.PostUserImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -16,18 +17,12 @@ public class PostUserService {
     private final UserDao userDao;
     private final PostDao postDao;
 
-    public Optional<?> createPost(MultipartFile image, String description, Authentication auth) {
-        var username = auth.getName();
-        if (!userDao.ifExistsUsername(username))
-            return Optional.empty();
-        var post = postDao.createPost(
-                PostUserImageDto.builder()
-                        .imageFile(image)
-                        .description(description)
-                        .username(username)
-                        .build()
-        );
-        post.setPoster(userDao.getUserByUsername(username).get(0));
+    public Optional<?> createPost(PostForm postForm, Authentication auth) {
+//        var username = auth.getName();
+//        if (!userDao.ifExistsUsername(username))
+//            return Optional.empty();
+        var post = postDao.createPost(postForm);
+        post.setPoster(userDao.getUserDtoById(postForm.getUserId()).get());
         return Optional.of(post);
     }
 

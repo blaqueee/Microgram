@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/styles/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <button id="showSplashButton" hidden>Show splash screen</button>
+        <div id="splash" class="splash-wrap">
+            <div class="splash">
+                <p class="splash-title">Microgram</p>
+                <form class="splash-form">
+                    <div class="form-input-block">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="username" class="form-input">
+                    </div>
+                    <div class="form-input-block">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="password" class="form-input">
+                    </div>
+                    <button id="authorize" class="authorize-button">Sign in</button>
+                </form>
+            </div>
+        </div>
+        <div class="main-content" hidden>
+            <!-- <div class="functionality">
+                <div>
+                    <div class="buttons py-2 col-12">
+                        <button id="addPostToArrayButton">Add post to array</button>
+                        <br>
+                        <input type="number" id="postIdForLike" name="postId" placeholder="ID поста">
+                        <input type="button" id="likeButton" name="like" value="Like"/>
+                        <br>
+                        <input type="number" id="postIdForDislike" name="postId" placeholder="ID поста">
+                        <input type="button" id="dislikeButton" name="dislike" value="Dislike"/>
+                    </div>
+                </div>
+            </div> -->
+            <div class="post-form">
+                <form id="post-form">
+                    <div class="example-2">
+                        <div class="form-group">
+                            <input type="text" name="user_id" hidden value="1">
+                            <input type="file" name="file" id="file" class="input-file" required>
+                            <label for="file" class="btn btn-tertiary js-labelFile">
+                                <i class="icon fa fa-check"></i>
+                                <span class="js-fileName">Загрузить файл</span>
+                            </label>
+                            <input type="text" name="description" placeholder="Описание поста" class="btn btn-tertiary text-input" required>
+                            <button type="submit" class="send-post-form-button">Отправить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="main">
+                <div class="posts">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../static/scripts/main.js"></script>
+<script src="../static/scripts/post.js"></script>
+<script src="https://kit.fontawesome.com/33c221dd93.js" crossorigin="anonymous"></script>
+</html>

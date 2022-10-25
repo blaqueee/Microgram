@@ -1,6 +1,7 @@
 package com.example.microgram.Controller;
 
 import com.example.microgram.DTO.PostDto;
+import com.example.microgram.DTO.PostForm;
 import com.example.microgram.Service.PostService;
 import com.example.microgram.Service.PostUserService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,13 @@ public class PostController {
     private final PostUserService postUserService;
 
     @PostMapping
-    /* Пост отправляется в виде form_data
-            image   ->   (файл)
-            description  ->  (текст)
-     */
-    public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, Authentication auth) {
-        var post = postUserService.createPost(image, description, auth);
+    public ResponseEntity<?> addPost(@RequestBody MultipartFile image, String description, Long userId, Authentication auth) {
+        var post = postUserService.createPost(PostForm.builder()
+                .file(image)
+                .description(description)
+                .userId(userId)
+                .build(),
+        auth);
         return post.isPresent() ?
                 new ResponseEntity<>(post.get(), HttpStatus.OK) :
                 new ResponseEntity<>("Вы должны войти в аккаунт, чтобы добавить пост!", HttpStatus.CONFLICT);

@@ -6,12 +6,15 @@ import com.example.microgram.Utility.DataGenerator.CommentExample;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -53,17 +56,24 @@ public class CommentDao {
         System.out.println( "inserted " + comments.size() + " rows into 'comments'");
     }
 
-    public String addComment(CommentForm commentForm, Long userID) {
+    public CommentDto addComment(CommentForm commentForm) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO comments(post_id, user_id, text, time)\n" +
                 "VALUES(?, ?, ?, ?)";
-        jdbcTemplate.update(query,
-                commentForm.getPostId(),
-                commentForm.getUserId(),
-                commentForm.getText(),
-                ld
-        );
-        return "Комментарий успешно добавлен!";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            ps.setLong(1, commentForm.getPostId());
+            ps.setLong(2, commentForm.getUserId());
+            ps.setString(3, commentForm.getText());
+            ps.setTimestamp(4, Timestamp.valueOf(ld));
+            return ps;
+        }, keyHolder);
+        return CommentDto.builder()
+                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
+                .text(commentForm.getText())
+                .time(ld)
+                .build();
     }
 
     public String deleteComment(Long commentID, Long postID) {

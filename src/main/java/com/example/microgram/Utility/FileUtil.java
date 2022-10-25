@@ -9,11 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileUtil {
-    private static final String postsDir = "/Users/blaque/Documents/Attractor_School/Java(month 8)/Homeworks/homework_js/images/";
+    private static final String postsDir = "src/main/resources/static/images/";
 
     public static String createFileFromMultipartFile(MultipartFile multipartFile, int postID, String username) {
         byte[] data = getBytesFromMultipartFile(multipartFile);
-        String name = String.format("posts_%s_%s.jpg", username, postID);
+        String name = String.format("posts_%s_%s.jpg", username, "post_" + postID);
         File file = new File(postsDir + name);
         try(FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(data);

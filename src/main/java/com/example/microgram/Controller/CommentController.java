@@ -18,7 +18,7 @@ public class CommentController {
     private final CommentPostUserService commentPostUserService;
 
     @PostMapping()
-    public ResponseEntity<String> addComment(@RequestBody CommentForm commentForm, Authentication auth) {
+    public ResponseEntity<CommentDto> addComment(@RequestBody CommentForm commentForm, Authentication auth) {
         return new ResponseEntity<>(commentPostUserService.addComment(commentForm, auth), HttpStatus.OK);
     }
 
