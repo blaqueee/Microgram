@@ -3,11 +3,9 @@ package com.example.microgram.DAO;
 import com.example.microgram.DAO.Mappers.PostMapper;
 import com.example.microgram.DTO.PostDto;
 import com.example.microgram.DTO.PostForm;
-import com.example.microgram.DTO.PostUserImageDto;
 import com.example.microgram.Utility.DataGenerator.PostExample;
 import com.example.microgram.Utility.FileUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -104,6 +102,12 @@ public class PostDao {
                 .time(ld)
                 .comments(new ArrayList<>())
                 .build();
+    }
+
+    public List<PostDto> getAllPosts() {
+        String sql = "SELECT p.id, p.image, p.description, p.time, p.user_id\n" +
+                "FROM posts p";
+        return jdbcTemplate.query(sql, new PostMapper(jdbcTemplate));
     }
 
     public String deletePost(Long postID, String username) {

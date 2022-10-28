@@ -19,4 +19,8 @@ public class PostService {
     public List<PostDto> getReelsByUsername(String username) {
         return postDao.getReelsByUsername(username);
     }
+
+    public List<PostDto> getAllPosts() {
+        return postDao.getAllPosts();
+    }
 }

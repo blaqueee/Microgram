@@ -99,11 +99,11 @@ function createPostElement(post) {
             <form class="comment-form">
                 <input type="text" name="post_id" value="${post.id}" hidden>
                 <input type="text" name="user_id" value="${user.id}" hidden>
-                <textarea name="text" placeholder="Добавьте комментарий..." class="comment-form-text"></textarea>
+                <textarea name="text" placeholder="Добавьте комментарий..." class="comment-form-text" required></textarea>
                 <button type="submit" class="send-post-form-button">Отправить</button>
             </form>
         </div>
-        <div id="post-${post.id}-comments" class="comments">
+        <div id="post-${post.id}-comments" hidden>
         </div>
     </div>`
     return postElement
@@ -302,6 +302,27 @@ function sendComment(comment) {
         let data = response.data
         let commentElement = createCommentElement(data)
         addComment(comment.post_id, commentElement)
+    })
+    .catch((error) => {
+        alert(error)
+    })
+}
+
+function getPosts() {
+    axios.get(BASE_URL + '/posts')
+    .then((response) => {
+        let data = response.data
+        console.log(data)
+        data.forEach((post) => {
+            let postElement = createPostElement(post)
+            addPost(postElement)
+            createListenersForPost(post)
+            let comments = post.comments
+            comments.forEach((comment) => {
+                let commentElement = createCommentElement(comment)
+                addComment(post.id, commentElement)
+            })
+        })
     })
     .catch((error) => {
         alert(error)

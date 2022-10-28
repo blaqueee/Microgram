@@ -35,6 +35,7 @@ function authorize(event) {
     if (user['username'] === email && user['password'] === password) {
         user['authorized'] = true
         hideSplashScreen()
+        getPosts()
         showSplashButton.hidden = false
         return
     }

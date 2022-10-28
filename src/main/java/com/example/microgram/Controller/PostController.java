@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -47,5 +46,10 @@ public class PostController {
     @GetMapping("/{username}/reels") // показать ленту пользователя на основе подписок
     public ResponseEntity<List<PostDto>> getReelsByUsername(@PathVariable String username) {
         return new ResponseEntity<>(postService.getReelsByUsername(username), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PostDto>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
     }
 }

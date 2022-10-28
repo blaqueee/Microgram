@@ -3,11 +3,9 @@ package com.example.microgram.Service;
 import com.example.microgram.DAO.PostDao;
 import com.example.microgram.DAO.UserDao;
 import com.example.microgram.DTO.PostForm;
-import com.example.microgram.DTO.PostUserImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
