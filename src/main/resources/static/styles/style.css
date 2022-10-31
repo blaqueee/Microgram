@@ -64,6 +64,15 @@ body {
     background-color: #dddddd;
 }
 
+.main-content {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
 .form-input {
     border: 1px solid #b0b0b0;
     padding: 5px 20px;
@@ -312,4 +321,14 @@ body {
     color: rgb(142, 142, 142);
     margin: 0;
     padding-left: 10px;
+}
+
+.register-button {
+    display: inline-block;
+    padding: 5px 15px;
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
 }

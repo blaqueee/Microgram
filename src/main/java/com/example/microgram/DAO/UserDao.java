@@ -6,12 +6,15 @@ import com.example.microgram.Utility.DataGenerator.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -46,7 +49,7 @@ public class UserDao {
     }
 
     public List<UserDto> getUserByEmail(String email) {
-        String query =  queryTemp + "from users u where u.email = ?";
+        String query = queryTemp + "from users u where u.email = ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), email);
     }
 
@@ -137,17 +140,20 @@ public class UserDao {
         System.out.println("inserted " + users.size() + " rows into 'users'");
     }
 
-    public String createNewUser(User user) {
-        if (!ifExists(user)) {
-            String query = "INSERT INTO users(username, name, email, password, enabled)\n" +
-                    "VALUES(?, ?, ?, ?, true)";
-            var sm = jdbcTemplate.update(query,
-                    user.getUsername(), user.getName(), user.getEmail(), encoder.encode(user.getPassword()));
-            createAuthority(user.getUsername());
-            return "Регистрация прошла успешно!";
-        }
-        return "Не удалось завершить регистрацию!\n" +
-                "Такое имя пользователя или электронная почта существует!";
+    public Long createNewUser(User user) {
+        String query = "INSERT INTO users(username, name, email, password, enabled)\n" +
+                "VALUES(?, ?, ?, ?, true)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getName());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, encoder.encode(user.getPassword()));
+            return ps;
+        }, keyHolder);
+        createAuthority(user.getUsername());
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     private void createAuthority(String username) {
@@ -180,7 +186,7 @@ public class UserDao {
         return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(UserDto.class), id));
     }
 
-    private boolean ifExists(User user) {
+    public boolean ifExists(User user) {
         if (ifExistsEmail(user.getEmail()))
             return true;
         if (ifExistsUsername(user.getUsername()))

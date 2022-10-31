@@ -22,7 +22,7 @@ public class MainController {
             "password": "12345678"
         }
      */
-    public ResponseEntity<String> createNewUser(@RequestBody User user) {
-        return new ResponseEntity<>(service.createNewUser(user), HttpStatus.OK);
+    public ResponseEntity<?> createNewUser(@RequestBody User user) {
+        return service.createNewUser(user);
     }
 }

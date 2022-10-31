@@ -312,7 +312,6 @@ function getPosts() {
     axios.get(BASE_URL + '/posts')
     .then((response) => {
         let data = response.data
-        console.log(data)
         data.forEach((post) => {
             let postElement = createPostElement(post)
             addPost(postElement)
