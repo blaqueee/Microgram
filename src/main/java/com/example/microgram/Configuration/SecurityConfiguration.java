@@ -24,7 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final DataSource dataSource;
 
     @Bean
-    public static PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -43,13 +43,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "/likes/**",
-//                        "/comments/**",
-//                        "/posts/**",
-//                        "/subscriptions/**").fullyAuthenticated()
-//                .antMatchers(HttpMethod.DELETE, "/comments/**",
-//                        "/posts/**").fullyAuthenticated();
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST,
+                        "/likes/**",
+                        "/comments/**",
+                        "/posts/**",
+                        "/subscriptions/**").fullyAuthenticated()
+                .antMatchers(HttpMethod.DELETE, "/comments/**",
+                        "/posts/**").fullyAuthenticated();
 
         http.authorizeRequests().anyRequest().permitAll();
 

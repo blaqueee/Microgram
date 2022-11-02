@@ -98,7 +98,7 @@ function createPostElement(post) {
             <hr style="margin: 15px 0;">
             <form class="comment-form">
                 <input type="text" name="post_id" value="${post.id}" hidden>
-                <input type="text" name="user_id" value="${user.id}" hidden>
+                <input type="text" name="user_id" value="${getUserFromLocalStorage().id}" hidden>
                 <textarea name="text" placeholder="Добавьте комментарий..." class="comment-form-text" required></textarea>
                 <button type="submit" class="send-post-form-button">Отправить</button>
             </form>
@@ -257,23 +257,24 @@ function createPost(event) {
     data.forEach((value, key) => {
         object[key] = value
     })
-    let userId = object['user_id']
+    let userId = getUserFromLocalStorage().id
     let image = object['file']
     let description = object['description']
     sendPost(userId, image, description)
 }
 
 function sendPost(userId, image, description) {
-    axios.post(BASE_URL + '/posts', {
+    let body = {
+        userId,
         image,
-        description,
-        userId
-    }, 
-    {
+        description
+    }
+    let options = {
         headers: {
             "Content-Type": "multipart/form-data"
         }
-    })
+    }
+    sendAuthorizedPostRequest(BASE_URL + '/posts', body, options)
     .then((response) => {
         let post = response.data
         let postElement = createPostElement(post)
@@ -297,14 +298,17 @@ function createComment(event) {
 }
 
 function sendComment(comment) {
-    axios.post(BASE_URL + '/comments', comment)
+    let options = {
+        headers: {}
+    }
+    sendAuthorizedPostRequest(BASE_URL + '/comments', comment, options)
     .then((response) => {
         let data = response.data
         let commentElement = createCommentElement(data)
         addComment(comment.post_id, commentElement)
     })
     .catch((error) => {
-        alert(error)
+        alert(error.response.data)
     })
 }
 

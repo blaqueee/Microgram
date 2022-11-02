@@ -17,17 +17,12 @@ public class LikeController {
     private final LikeService likeService;
     private final LikeUserPostService likeUserPostService;
 
-    @GetMapping("/{username}/{postID}") // проверка лайка пользователя определенного поста
+    @GetMapping("/{username}/{postID}")
     public ResponseEntity<String> ifUserLikedThisPost(@PathVariable String username, @PathVariable Long postID) {
         return new ResponseEntity<>(likeService.ifUserLiked(username, postID), HttpStatus.OK);
     }
 
     @PostMapping
-    /*  лайк ставится в виде json
-            {
-                "post_id": 3
-             }
-     */
     public ResponseEntity<String> likePost(@RequestBody LikeDto likeDto, Authentication auth) {
         return new ResponseEntity<>(likeUserPostService.likePost(likeDto, auth), HttpStatus.OK);
     }

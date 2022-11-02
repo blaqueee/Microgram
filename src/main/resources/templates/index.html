@@ -14,7 +14,8 @@
         <div id="splash" class="splash-wrap">
             <div class="splash">
                 <p class="splash-title">Microgram</p>
-                <form class="splash-form">
+                <p class="login-error" hidden>Invalid username or password!</p>
+                <form id="login-form" class="splash-form">
                     <div class="form-input-block">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" placeholder="username" class="form-input">
@@ -23,7 +24,7 @@
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="password" class="form-input">
                     </div>
-                    <button id="authorize" class="authorize-button">Sign in</button>
+                    <button type="submit" class="authorize-button">Sign in</button>
                     <a href="register.html">Sign up</a>
                 </form>
             </div>
@@ -42,12 +43,11 @@
                     </div>
                 </div>
             </div> -->
-            <a class="register-button" href="register.html">Sign up</a>
             <div class="post-form">
                 <form id="post-form">
                     <div class="example-2">
                         <div class="form-group">
-                            <input type="text" name="user_id" hidden value="2">
+                            <input type="text" name="user_id" hidden>
                             <input type="file" name="file" id="file" class="input-file" required>
                             <label for="file" class="btn btn-tertiary js-labelFile">
                                 <i class="icon fa fa-check"></i>
@@ -67,7 +67,7 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="../static/scripts/main.js"></script>
 <script src="../static/scripts/post.js"></script>
+<script src="../static/scripts/main.js"></script>
 <script src="https://kit.fontawesome.com/33c221dd93.js" crossorigin="anonymous"></script>
 </html>

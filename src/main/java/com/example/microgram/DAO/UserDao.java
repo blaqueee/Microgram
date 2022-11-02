@@ -4,6 +4,7 @@ import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
 import com.example.microgram.Utility.DataGenerator.UserEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +22,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserDao {
     private final JdbcTemplate jdbcTemplate;
-    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private final PasswordEncoder encoder;
 
     private final String queryTemp = "select u.id,\n" +
             "       u.username,\n" +
@@ -43,9 +46,14 @@ public class UserDao {
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), name);
     }
 
-    public List<UserDto> getUserByUsername(String username) {
+    public List<UserDto> getUserDtoByUsername(String username) {
         String query = queryTemp + "from users u where u.username = ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(UserDto.class), username);
+    }
+
+    public List<User> getUserByUsername(String username) {
+        String query = queryTemp + "from users u where u.username = ?";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(User.class), username);
     }
 
     public List<UserDto> getUserByEmail(String email) {
