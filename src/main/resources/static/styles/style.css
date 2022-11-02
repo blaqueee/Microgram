@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800);
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -20,11 +22,21 @@ body {
 }
 
 .splash-title {
+    padding-top: 30px;
     text-align: center;
     margin-top: 0;
-    margin-bottom: 50px;
+    margin-bottom: 0;
     font-size: 45px;
     font-weight: 600;
+}
+
+.login-error {
+    text-align: center;
+    margin-top: 0;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: red;
 }
 
 .splash-form {
@@ -64,11 +76,11 @@ body {
     background-color: #dddddd;
 }
 
-.main-content {
+.main-body {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 20px;
 }
@@ -255,7 +267,7 @@ body {
 }
 
 .post-form {
-    margin: 50px 0;
+    margin: 20px 0 50px;
 }
 
 .comment-form-block {
@@ -331,4 +343,62 @@ body {
     color: white;
     border-radius: 5px;
     font-size: 20px;
+}
+
+.header {
+    font-family:'Dosis';
+    width: 100%;
+    border-bottom: 1px solid black;
+    text-align: right;
+    position: relative;
+}
+
+.logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 32px;
+    font-weight: 100;
+    padding: 12px 30px;
+}
+
+
+.link {
+    font-family:'Dosis';
+    display: inline-block;
+    padding: 10px 0;
+    margin: 10px 25px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: #0f0f0f;
+    font-weight: 800;
+    font-size: 24px;
+    border: 0;
+    background-color: transparent;
+}
+  
+.bar {
+    width: 100%;
+    display: inline-block;
+    border-bottom: 5px solid black;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    transition: all 300ms;
+}
+
+.signup, .logout {
+    border-radius: 5px;
+    padding: 3px 8px;
+    cursor: pointer;
+}
+
+.signup {
+    background-color: #5AAC7B;
+}
+
+.logout {
+    background-color: rgb(241, 67, 67);
 }

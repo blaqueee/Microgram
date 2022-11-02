@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public List<UserDto> getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
+        return userDao.getUserDtoByUsername(username);
     }
 
     public List<UserDto> getUserByEmail(String email) {

@@ -1,5 +1,7 @@
 package com.example.microgram.Controller;
 
+import com.example.microgram.DTO.LoginForm;
+import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
 import com.example.microgram.Service.MainService;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +16,12 @@ public class MainController {
     private final MainService service;
 
     @PostMapping("/register")
-    /* Регистрация отправляется в таком виде
-        {
-            "username": "blaque",
-            "name": "Halo",
-            "email": "bla@bla.bla",
-            "password": "12345678"
-        }
-     */
     public ResponseEntity<?> createNewUser(@RequestBody User user) {
         return service.createNewUser(user);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+        return service.login(loginForm);
     }
 }
