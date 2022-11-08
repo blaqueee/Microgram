@@ -1,20 +1,17 @@
 package com.example.microgram.Entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Like {
+    private Long id;
     private User liked;
     private Post likedPost;
-    private LocalDateTime time;
-
-    public Like(User liked, Post likedPost) {
-        this.liked = liked;
-        this.likedPost = likedPost;
-        this.time = LocalDateTime.now();
-    }
+    private LocalDateTime time = LocalDateTime.now();
 }

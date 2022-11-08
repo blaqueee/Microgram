@@ -1,7 +1,7 @@
 package com.example.microgram.Controller;
 
 import com.example.microgram.DTO.CommentDto;
-import com.example.microgram.DTO.CommentForm;
+import com.example.microgram.DTO.Form.CommentForm;
 import com.example.microgram.Service.CommentService;
 import com.example.microgram.Service.CommentPostUserService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,7 @@ public class CommentController {
 
     @DeleteMapping("/{postID}/{commentID}")
     public ResponseEntity<String> deleteComment(@PathVariable Long postID, @PathVariable Long commentID, Authentication authentication) {
-        return new ResponseEntity<>(
-                commentPostUserService.deleteComment(postID, commentID, authentication), HttpStatus.OK);
+        return commentPostUserService.deleteComment(postID, commentID, authentication);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.microgram.Controller;
 
+import com.example.microgram.DTO.Form.SubscriptionForm;
 import com.example.microgram.DTO.SubscriptionDto;
 import com.example.microgram.Service.SubscriptionService;
 import com.example.microgram.Service.SubscriptionUserService;
@@ -25,7 +26,7 @@ public class SubscriptionController {
             "user_id": 1 -> (id пользователя, на которого хотите подписаться)
         }
      */
-    public ResponseEntity<String> follow(@RequestBody SubscriptionDto subDto, Authentication auth) {
-        return new ResponseEntity<>(subUserService.follow(subDto, auth), HttpStatus.OK);
+    public ResponseEntity<String> follow(@RequestBody SubscriptionForm subForm, Authentication auth) {
+        return subUserService.follow(subForm, auth);
     }
 }

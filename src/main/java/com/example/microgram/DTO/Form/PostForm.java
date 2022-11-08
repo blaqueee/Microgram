@@ -1,16 +1,17 @@
-package com.example.microgram.DTO;
+package com.example.microgram.DTO.Form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LikeDto {
+public class PostForm {
     @JsonProperty("user_id")
     private Long userId;
-    @JsonProperty("post_id")
-    private Long postId;
+    private MultipartFile file;
+    private String description;
 }

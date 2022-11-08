@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/exists/{email}") // проверка на наличие поьзователя в системе
     public ResponseEntity<String> isRegistered(@PathVariable String email) {
-        return new ResponseEntity<>(service.isRegistered(email), HttpStatus.OK);
+        return service.isRegistered(email);
     }
 
     @GetMapping("/{username}/followers")

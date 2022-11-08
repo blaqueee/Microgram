@@ -1,4 +1,4 @@
-package com.example.microgram.DTO;
+package com.example.microgram.DTO.Form;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
