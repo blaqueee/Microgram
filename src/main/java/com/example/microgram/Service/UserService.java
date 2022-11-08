@@ -3,6 +3,8 @@ package com.example.microgram.Service;
 import com.example.microgram.DAO.UserDao;
 import com.example.microgram.DTO.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,9 @@ public class UserService {
         return userDao.getUserByEmail(email);
     }
 
-    public String isRegistered(String email) {
-        return userDao.ifExistsEmail(email) ? "Пользователь есть в системе" : "Пользователя нету в системе";
+    public ResponseEntity<String> isRegistered(String email) {
+        String body = userDao.ifExistsEmail(email) ? "Пользователь есть в системе" : "Пользователя нету в системе";
+        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
     }
 
     public List<UserDto> getFollowersByUsername(String username) {

@@ -2,8 +2,7 @@ package com.example.microgram.DAO;
 
 import com.example.microgram.DAO.Mappers.PostMapper;
 import com.example.microgram.DTO.PostDto;
-import com.example.microgram.DTO.PostForm;
-import com.example.microgram.Utility.DataGenerator.PostExample;
+import com.example.microgram.DTO.Form.PostForm;
 import com.example.microgram.Utility.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,15 +13,14 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class PostDao {
     private final JdbcTemplate jdbcTemplate;
+    private final com.example.microgram.Mapper.PostMapper postMapper;
 
     public List<PostDto> getPostsByUsername(String username) {
         String query = "select p.id, p.image, p.description, p.time, p.user_id " +
@@ -60,31 +58,11 @@ public class PostDao {
         System.out.println("created table 'posts'");
     }
 
-    public void insertPosts(List<PostExample> posts) {
-        String query = "INSERT INTO posts(image, description, time, user_id)\n" +
-                "VALUES(?, ?, ?, ?)";
-        for (PostExample post : posts) {
-            jdbcTemplate.update(conn -> {
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setString(1, post.getImage());
-                ps.setString(2, post.getDescription());
-                ps.setTimestamp(3, Timestamp.valueOf(post.getTime()));
-                ps.setInt(4, post.getUserID());
-                return ps;
-            });
-        }
-        System.out.println("inserted " + posts.size() + " rows into 'posts'");
-    }
-
     public PostDto createPost(PostForm post) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO posts(image, description, time, user_id)\n" +
                 "VALUES(?, ?, ?, ?)";
-        String fileName = FileUtil.createFileFromMultipartFile(
-                post.getFile(),
-                getAmountOfPostsById(post.getUserId()) + 1,
-                "userID_" + post.getUserId()
-        );
+        String fileName = writePhotoFile(post);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
@@ -95,13 +73,7 @@ public class PostDao {
             return ps;
         }, keyHolder);
 
-        return PostDto.builder()
-                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
-                .image(fileName)
-                .description(post.getDescription())
-                .time(ld)
-                .comments(new ArrayList<>())
-                .build();
+        return postMapper.toPostDto(keyHolder, fileName, post.getDescription(), ld);
     }
 
     public List<PostDto> getAllPosts() {
@@ -111,14 +83,8 @@ public class PostDao {
     }
 
     public String deletePost(Long postID, String username) {
-        if (!isPostOwner(postID, username))
-            return "Вы не можете удалять чужие публикации!";
         deleteCommentsOfPost(postID);
         deleteLikesOfPost(postID);
-        var optImage = getImageById(postID);
-        if (optImage.isEmpty())
-            return "Не существует такой публикации!";
-        FileUtil.deleteImageFile(optImage.get());
         String query = "DELETE FROM POSTS\n" +
                 "WHERE id = ? AND user_id = ?";
         jdbcTemplate.update(query, postID, getUserIdByUsername(username));
@@ -148,10 +114,10 @@ public class PostDao {
         return result == 1;
     }
 
-    private Optional<String> getImageById(Long postID) {
+    public Optional<String> getImageById(Long postID) {
         String query = "SELECT image FROM POSTS WHERE id = ?";
         String image = jdbcTemplate.queryForObject(query, String.class, postID);
-        return Optional.of(image);
+        return Optional.ofNullable(image);
     }
 
     private Long getIdByImage(String image) {
@@ -172,5 +138,13 @@ public class PostDao {
     private void deleteLikesOfPost(Long postID) {
         String query = "DELETE FROM likes WHERE post_id = ?";
         jdbcTemplate.update(query, postID);
+    }
+
+    private String writePhotoFile(PostForm post) {
+        return FileUtil.createFileFromMultipartFile(
+                post.getFile(),
+                getAmountOfPostsById(post.getUserId()) + 1,
+                "userID_" + post.getUserId()
+        );
     }
 }

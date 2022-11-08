@@ -1,7 +1,7 @@
 package com.example.microgram.Service;
 
 import com.example.microgram.DAO.UserDao;
-import com.example.microgram.DTO.LoginForm;
+import com.example.microgram.DTO.Form.LoginForm;
 import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
 import lombok.RequiredArgsConstructor;

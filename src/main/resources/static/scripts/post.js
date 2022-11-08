@@ -313,6 +313,7 @@ function sendComment(comment) {
 }
 
 function getPosts() {
+    clearPosts()
     axios.get(BASE_URL + '/posts')
     .then((response) => {
         let data = response.data
@@ -330,4 +331,9 @@ function getPosts() {
     .catch((error) => {
         alert(error)
     })
+}
+
+function clearPosts() {
+    let postsBlock = document.getElementsByClassName('posts')[0]
+    postsBlock.innerHTML = ``
 }

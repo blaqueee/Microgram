@@ -1,8 +1,8 @@
 package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.CommentDto;
-import com.example.microgram.DTO.CommentForm;
-import com.example.microgram.Utility.DataGenerator.CommentExample;
+import com.example.microgram.DTO.Form.CommentForm;
+import com.example.microgram.Mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,12 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class CommentDao {
     private final JdbcTemplate jdbcTemplate;
+    private final CommentMapper commentMapper;
 
     public void dropTable() {
         String query = "DROP TABLE IF EXISTS comments";
@@ -40,22 +40,6 @@ public class CommentDao {
         System.out.println("created table 'comments'");
     }
 
-    public void insertComments(List<CommentExample> comments) {
-        String query = "INSERT INTO comments(post_id, user_id, text, time)\n" +
-                "VALUES(?, ?, ?, ?)";
-        for (CommentExample comment : comments) {
-            jdbcTemplate.update(conn -> {
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setInt(1, comment.getPostID());
-                ps.setInt(2, comment.getUserID());
-                ps.setString(3, comment.getText());
-                ps.setTimestamp(4, Timestamp.valueOf(comment.getTime()));
-                return ps;
-            });
-        }
-        System.out.println( "inserted " + comments.size() + " rows into 'comments'");
-    }
-
     public CommentDto addComment(CommentForm commentForm) {
         LocalDateTime ld = LocalDateTime.now();
         String query = "INSERT INTO comments(post_id, user_id, text, time)\n" +
@@ -69,23 +53,16 @@ public class CommentDao {
             ps.setTimestamp(4, Timestamp.valueOf(ld));
             return ps;
         }, keyHolder);
-        return CommentDto.builder()
-                .id(Objects.requireNonNull(keyHolder.getKey()).longValue())
-                .text(commentForm.getText())
-                .time(ld)
-                .build();
+        return commentMapper.toCommentDto(keyHolder, commentForm.getText(), ld);
     }
 
     public String deleteComment(Long commentID, Long postID) {
-        if (ifExistsById(commentID, postID)) {
-            String query = "DELETE FROM comments WHERE id = ?";
-            jdbcTemplate.update(query, commentID);
-            return "Комментарий успешно удален!";
-        }
-        return "Не существующий комментарий!";
+        String query = "DELETE FROM comments WHERE id = ?";
+        jdbcTemplate.update(query, commentID);
+        return "Комментарий успешно удален!";
     }
 
-    private boolean ifExistsById(Long commentID, Long postID) {
+    public boolean ifExistsById(Long commentID, Long postID) {
         String query = "SELECT COUNT(id) FROM comments WHERE id = ? AND post_id = ?";
         var count = jdbcTemplate.queryForObject(query, Integer.class, commentID, postID);
         return count == 1;

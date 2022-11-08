@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -14,12 +15,6 @@ public class Post {
     private Long id;
     private String image;
     private String description;
-    private LocalDateTime time;
+    private LocalDateTime time = LocalDateTime.now();
     private List<Comment> comments = new ArrayList<>();
-
-    public Post(String image, String description) {
-        this.image = image;
-        this.description = description;
-        this.time = LocalDateTime.now();
-    }
 }

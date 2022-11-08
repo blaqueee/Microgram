@@ -2,14 +2,12 @@ package com.example.microgram.DAO;
 
 import com.example.microgram.DTO.UserDto;
 import com.example.microgram.Entity.User;
-import com.example.microgram.Utility.DataGenerator.UserEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -125,27 +123,6 @@ public class UserDao {
                 ");";
         jdbcTemplate.update(query);
         System.out.println("created table 'authorities'");
-    }
-
-    public void insertUsers(List<UserEnum> users) {
-        String query = "INSERT INTO users(username, name, email, password, enabled)\n" +
-                "VALUES(?, ?, ?, ?, ?)";
-        String queryAuth = "INSERT INTO authorities(user_id, authority)" +
-                "VALUES(?, ?)";
-        for (int i = 0; i < users.size(); i++) {
-            int finalI = i;
-            jdbcTemplate.update(conn -> {
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setString(1, users.get(finalI).getUsername());
-                ps.setString(2, users.get(finalI).getName());
-                ps.setString(3, users.get(finalI).getEmail());
-                ps.setString(4, encoder.encode(users.get(finalI).getPassword()));
-                ps.setBoolean(5, users.get(finalI).isEnabled());
-                return ps;
-            });
-            jdbcTemplate.update(queryAuth, finalI + 1, "ROLE_USER");
-        }
-        System.out.println("inserted " + users.size() + " rows into 'users'");
     }
 
     public Long createNewUser(User user) {

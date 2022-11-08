@@ -1,4 +1,4 @@
-package com.example.microgram.DTO;
+package com.example.microgram.DTO.Form;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

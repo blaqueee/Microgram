@@ -1,14 +1,11 @@
 package com.example.microgram.DAO;
 
-import com.example.microgram.Utility.DataGenerator.SubscriptionExample;
+import com.example.microgram.DTO.Form.SubscriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -33,27 +30,10 @@ public class SubscriptionDao {
         System.out.println("created table 'subscriptions'");
     }
 
-    public void insertSubscriptions(List<SubscriptionExample> subs) {
+    public String follow(SubscriptionForm subscriptionForm) {
         String query = "INSERT INTO subscriptions(user_id, follower_id, time)\n" +
                 "VALUES(?, ?, ?)";
-        for (SubscriptionExample sub : subs) {
-            jdbcTemplate.update(conn -> {
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setInt(1, sub.getUserID());
-                ps.setInt(2, sub.getFollowerID());
-                ps.setTimestamp(3, Timestamp.valueOf(sub.getTime()));
-                return ps;
-            });
-        }
-        System.out.println("inserted " + subs.size() + " rows into 'subscriptions'");
-    }
-
-    public String follow(Long userID, Long followerID) {
-        if (isFollower(userID, followerID))
-            return "Вы уже подписаны на этого пользователя!";
-        String query = "INSERT INTO subscriptions(user_id, follower_id, time)\n" +
-                "VALUES(?, ?, ?)";
-        jdbcTemplate.update(query, userID, followerID, LocalDateTime.now());
+        jdbcTemplate.update(query, subscriptionForm.getUserId(), subscriptionForm.getFollowerId(), LocalDateTime.now());
         return "Вы успешно подписались на пользователя!";
     }
 

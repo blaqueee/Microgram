@@ -1,13 +1,16 @@
 package com.example.microgram.Entity;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Comment {
+    private Long id;
     private String text;
-    private LocalDateTime time;
+    private LocalDateTime time = LocalDateTime.now();
 }
